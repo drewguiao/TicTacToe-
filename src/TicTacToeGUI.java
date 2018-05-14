@@ -91,37 +91,24 @@ class TicTacToeGUI implements Constants{
 					updateGrid(cell);
 					turn = AI_TURN;
 
-					char[][] charMap = translateGridToCharMap();
-
-					State state = new State(charMap,turn);
-					MinMaxAlgo algo = new MinMaxAlgo();
-					state.setUtility(algo.getValue(state));
-					List<State> children = state.getChildren();
-					int stateUtility = state.getUtility();
-
 					if(isTerminal()){
 						JOptionPane.showMessageDialog(gameFrame, "PLAYER: "+numOfPlayerWins+" AI: "+numOfAIWins+" Draw:" +numOfDraws);
 						resetGrid();
 					}else{
-						for(State s: children){
-							if( stateUtility == s.getUtility()){
-								char[][] nextGrid = s.getGrid();
-								System.out.println("NEXT STATE GRID I CHOSE:");
-								System.out.println(s);
-								Cell cellDifference = getDifference(grid,nextGrid);
-								grid[cellDifference.getX()][cellDifference.getY()].setText(cellDifference.getText());
-								turn = PLAYER_TURN;
-								System.out.println("Cell["+cellDifference.getX()+"]["+cellDifference.getY()+"]: " + cellDifference.getText());
-								break;
-							}
+						char[][] charMap = translateGridToCharMap();
+						State state = new State(charMap,turn);
+						MinMaxAlgo algo = new MinMaxAlgo();
+						Cell cellDifference = algo.performAlphaBeta(state);
+						grid[cellDifference.getX()][cellDifference.getY()].setText(cellDifference.getText());
+						turn = PLAYER_TURN;
+						
+						if(isTerminal()){
+							JOptionPane.showMessageDialog(gameFrame, "PLAYER: "+numOfPlayerWins+" AI: "+numOfAIWins+" Draw:" +numOfDraws);
+							resetGrid();
 						}
+						
 					}
 
-					
-					if(isTerminal()){
-						JOptionPane.showMessageDialog(gameFrame, "PLAYER: "+numOfPlayerWins+" AI: "+numOfAIWins+" Draw:" +numOfDraws);
-						resetGrid();
-					}
 				}
 			}
 		};
@@ -129,16 +116,7 @@ class TicTacToeGUI implements Constants{
 		return listener;
 	}
 
-	private Cell getDifference(JButton[][] currentMap, char[][] nextMap){
-		for(int i = 0; i < GRID_SIZE; i++){
-			for(int j = 0; j < GRID_SIZE; j++){
-				if(!currentMap[i][j].getText().equals(""+((nextMap[i][j] == '\u0000')? "": nextMap[i][j]))){
-					return new Cell(i,j,""+nextMap[i][j]);
-				}
-			}
-		}
-		return null;
-	}
+	
 
 	private void resetGrid(){
 		turn = PLAYER_TURN;

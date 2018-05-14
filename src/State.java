@@ -76,9 +76,6 @@ class State implements Constants{
 		//top to bottom, left to right
 		if(!hasEmpty(s00,s10,s20) && isTrioTheSame(s00,s10,s20)){
 			this.utility = (s00.equals("O") ? -10 : 10);
-						System.out.println("NANI HERE");
-			System.out.println(this);
-			System.out.println("UTILITY HERE:"+this.utility);
 			return true;
 		}
 		if(!hasEmpty(s01,s11,s21) && isTrioTheSame(s01,s11,s21)){
